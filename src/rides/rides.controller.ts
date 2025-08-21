@@ -20,7 +20,7 @@ export class RidesController {
   }
 
   @Patch(':id/status')
-  status(@Param('id') id: number, @Body() dto: { status: 'in_progress' | 'completed' | 'cancelled' }) {
+  status(@Param('id') id: number, @Body() dto: { status: 'accepted' | 'in_progress' | 'completed' | 'cancelled' }) {
     return this.rides.updateStatus(+id, dto.status);
   }
 
