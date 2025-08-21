@@ -3,14 +3,14 @@ import { RidesService } from './rides.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('rides')
 export class RidesController {
   constructor(private rides: RidesService) {}
 
   @Post()
-  create(@CurrentUser() user: any, @Body() dto: { origin: [number, number]; dest: [number, number] }) {
-    return this.rides.createRequest(user.userId, dto.origin, dto.dest);
+  create(@CurrentUser() user: any, @Body() dto: { origin: [number, number]; dest: [number, number], price: number , clientPhone: number ,originAddress: string, destAddress: string}) {
+    return this.rides.createRequest(null, dto.origin, dto.dest, dto.price, dto.clientPhone, dto.originAddress, dto.destAddress);
   }
 
   @Patch(':id/assign')
@@ -30,7 +30,7 @@ export class RidesController {
   }
 
   @Get()
-  my(@CurrentUser() user: any) {
-    return this.rides.listMyRides(user.userId);
+  my(@Param('clientPhone') clientPhone: any) {
+    return this.rides.listMyRides(clientPhone);
   }
 }

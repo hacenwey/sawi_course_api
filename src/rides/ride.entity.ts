@@ -7,8 +7,8 @@ export class Ride {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: 'int' })
-  riderId!: number;
+  @Column({ type: 'int' ,nullable: true })
+  riderId!: number | null;
 
   @Column({ type: 'int', nullable: true })
   driverId!: number | null;
@@ -33,6 +33,12 @@ export class Ride {
 
   @Column({ type: 'float', default: 0 })
   price!: number;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  originAddress!: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+ destAddress!: string;
 
   @CreateDateColumn()
   createdAt!: Date;

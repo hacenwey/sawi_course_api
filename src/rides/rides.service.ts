@@ -7,12 +7,12 @@ import { Ride } from './ride.entity';
 export class RidesService {
   constructor(@InjectRepository(Ride) private repo: Repository<Ride>) {}
 
-  createRequest(riderId: number, origin: [number, number], dest: [number, number]) {
+  createRequest(riderId: any, origin: [number, number], dest: [number, number], price?: number,clientPhone?: number, originAddress?: string, destAddress?: string) {
     const [originLat, originLng] = origin;
     const [destLat, destLng] = dest;
     const ride = this.repo.create({
       riderId, driverId: null, status: 'requested',
-      originLat, originLng, destLat, destLng, price: 0
+      originLat, originLng, destLat, destLng, price: price || 0,clientPhone, originAddress, destAddress
     });
     return this.repo.save(ride);
   }
@@ -37,7 +37,8 @@ export class RidesService {
     return this.repo.findOne({ where: { id } });
   }
 
-  listMyRides(userId: number) {
-    return this.repo.find({ where: [{ riderId: userId }, { driverId: userId }] });
+  listMyRides(clientPhone: number) {
+    console.log(`Fetching rides for client ${clientPhone}`);
+    return this.repo.find({ where: [{ clientPhone }] });
   }
 }
