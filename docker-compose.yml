@@ -20,7 +20,7 @@ services:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: rootpassword
     ports:
-      - "8080:80"
+      - "8880:80"
     depends_on:
       - db
 
