@@ -31,23 +31,18 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @SubscribeMessage('ride:join')
-  joinRide(@MessageBody() payload: { rideId: number }, @ConnectedSocket() client: Socket) {
-    client.join(`ride:${payload.rideId}`);
+  joinRide(@MessageBody() payload: { clientPhone: number }, @ConnectedSocket() client: Socket) {
+    client.join(`ride:${payload.clientPhone}`);
   }
 
   @SubscribeMessage('ride:loc')
-  relayToRide(@MessageBody() payload: { rideId: number; lat: number; lng: number }, @ConnectedSocket() client: Socket) {
-    client.to(`ride:${payload.rideId}`).emit('ride:loc', payload);
+  relayToRide(@MessageBody() payload: { clientPhone: number; lat: number; lng: number }, @ConnectedSocket() client: Socket) {
+    client.to(`ride:${payload.clientPhone}`).emit('ride:loc', payload);
   }
 
   @SubscribeMessage('ride:request')
   relayRequestToRide(@MessageBody() payload: any, @ConnectedSocket() client: Socket) {
-    // console.log("new request ==> ", payload.clientPhone,payload);
-    // client.to(`ride:${payload.clientPhone}`).emit('ride:request', payload);
-     console.log("new request ==> ", payload.clientPhone, payload);
-
-      // Send to everyone
-       client.broadcast.emit('ride:request', payload);
-
+    console.log("new request ==> ", payload.clientPhone,payload);
+    client.to(`ride:${payload.clientPhone}`).emit('ride:request', payload);
   }
 }
