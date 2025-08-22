@@ -44,6 +44,8 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
   @SubscribeMessage('ride:request')
   relayRequestToRide(@MessageBody() payload: any, @ConnectedSocket() client: Socket) {
     console.log("new request ==> ", payload.clientPhone,payload);
+    // Send to everyone connected
+    client.broadcast.emit('ride:request', payload);
     client.to(`ride:${payload.clientPhone}`).emit('ride:request', payload);
   }
 }
