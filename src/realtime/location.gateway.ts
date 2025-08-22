@@ -1,7 +1,7 @@
 import {
-  WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect
+  WebSocketGateway,WebSocketServer, SubscribeMessage, MessageBody, ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
+import { Socket,Server } from 'socket.io';
 import Redis from 'ioredis';
 
 @WebSocketGateway({
@@ -12,6 +12,9 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
     host: process.env.REDIS_HOST || 'localhost',
     port: +(process.env.REDIS_PORT || 6379)
   });
+
+  @WebSocketServer()
+  server!: Server;
 
   async handleConnection(client: Socket) {
     console.log('WS connected', client.id);
@@ -41,7 +44,9 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
 
   @SubscribeMessage('ride:request')
   relayRequestToRide(@MessageBody() payload: any, @ConnectedSocket() client: Socket) {
-    console.log("new request ==> ", payload.clientPhone,payload);
-    client.to(`ride:${payload.clientPhone}`).emit('ride:request', payload);
+    console.log("new request ==> ", payload.clientPhone, payload);
+
+    // Send to EVERY connected socket (global broadcast)
+    this.server.emit('ride:request', payload);
   }
 }
