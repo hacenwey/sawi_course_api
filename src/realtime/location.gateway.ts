@@ -38,4 +38,10 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
   relayToRide(@MessageBody() payload: { rideId: number; lat: number; lng: number }, @ConnectedSocket() client: Socket) {
     client.to(`ride:${payload.rideId}`).emit('ride:loc', payload);
   }
+
+  @SubscribeMessage('ride:request')
+  relayRequestToRide(@MessageBody() payload: { clientPhone: number, origin: [number, number], dest: [number, number] }, @ConnectedSocket() client: Socket) {
+    console.log("new request ==> ", payload.clientPhone,payload);
+    client.to(`ride:${payload.clientPhone}`).emit('ride:request', payload);
+  }
 }
