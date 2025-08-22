@@ -32,6 +32,7 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
 
   @SubscribeMessage('ride:join')
   joinRide(@MessageBody() payload: { clientPhone: number }, @ConnectedSocket() client: Socket) {
+    console.log("new join ==> ", payload.clientPhone);
     client.join(`ride:${payload.clientPhone}`);
   }
 
