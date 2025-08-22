@@ -36,6 +36,11 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
     console.log("new join ==> ", payload.clientPhone);
     client.join(`ride:${payload.clientPhone}`);
   }
+  @SubscribeMessage('drivers:join')
+  joinDrivers(@MessageBody() payload: { clientPhone: number }, @ConnectedSocket() client: Socket) {
+    console.log("new join ==> ", payload.clientPhone);
+    client.join('drivers');
+  }
 
   @SubscribeMessage('ride:loc')
   relayToRide(@MessageBody() payload: { clientPhone: number; lat: number; lng: number }, @ConnectedSocket() client: Socket) {
@@ -45,7 +50,20 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
   @SubscribeMessage('ride:request')
   relayRequestToRide(@MessageBody() payload: any, @ConnectedSocket() client: Socket) {
     console.log("new request ==> ", payload.clientPhone,payload);
-  
-    this.server.to(`ride:${payload.clientPhone}`).emit('ride:request', payload);
+      this.server.to('drivers').emit('ride:request', payload);
   }
+
+  @SubscribeMessage('ride:accept')
+  handleRideAccept(@MessageBody() payload: any, @ConnectedSocket() client: Socket) {
+    console.log("Driver accepted:", payload);
+
+    // Notify the rider only
+    this.server.to(`ride:${payload.clientPhone}`).emit('ride:accepted', payload);
+
+    // Optionally, notify all other drivers that ride was accepted
+    client.to('drivers').emit('ride:declined', {
+      driverId: payload.driverId,
+      clientPhone: payload.clientPhone,
+    });
+   }
 }
