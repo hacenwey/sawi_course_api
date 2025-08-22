@@ -50,7 +50,9 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
   @SubscribeMessage('ride:request')
   relayRequestToRide(@MessageBody() payload: any, @ConnectedSocket() client: Socket) {
     console.log("new request ==> ", payload.clientPhone,payload);
+    setTimeout(() => {
       this.server.to('drivers').emit('ride:request', payload);
+    }, 5000);
   }
 
   @SubscribeMessage('ride:accept')
