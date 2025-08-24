@@ -47,12 +47,14 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
     console.log("new leave ==> ", payload.clientPhone);
     client.leave(`drivers:${payload.clientPhone}`);
   }
-  @SubscribeMessage('drivers:online')
+ @SubscribeMessage('drivers:online')
   isDriverOnline(@MessageBody() payload: any, @ConnectedSocket() client: Socket) {
-    const isOnline = this.server.sockets.adapter.rooms.get('drivers')?.has(payload.clientPhone) || false;
-    client.to('drivers').emit('drivers:online', { clientPhone: payload.clientPhone, isOnline });
-    console.log("isDriverOnline ==> ", payload.clientPhone, isOnline);
-   }
+    const isOnline =
+      this.server.sockets.adapter.rooms.get('drivers')?.has(payload.clientPhone) || false;
+    console.log('isDriverOnline', payload.clientPhone, isOnline);
+    // reply to the caller instead of broadcasting to a room
+    client.emit('driver:online', { clientPhone: payload.clientPhone, isOnline });
+  }
 
   @SubscribeMessage('ride:loc')
   relayToRide(@MessageBody() payload: { clientPhone: number; lat: number; lng: number }, @ConnectedSocket() client: Socket) {
