@@ -29,6 +29,6 @@ export class DriversService {
     const { clientPhone } = dto;
     const driver = await this.driversRepo.findOne({ where: { clientPhone } });
     if (!driver) return false;
-    return driver.isAvailable;
+    return { clientPhone: driver.clientPhone, isOnline: driver.isAvailable};
   }
 }
