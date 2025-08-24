@@ -42,6 +42,18 @@ export class LocationGateway implements OnGatewayConnection, OnGatewayDisconnect
     client.join('drivers');
   }
 
+  @SubscribeMessage('drivers:leave')
+  leaveRide(@MessageBody() payload: { clientPhone: number }, @ConnectedSocket() client: Socket) {
+    console.log("new leave ==> ", payload.clientPhone);
+    client.leave(`drivers:${payload.clientPhone}`);
+  }
+  @SubscribeMessage('divers:online')
+  isDriverOnline(@MessageBody() payload: any, @ConnectedSocket() client: Socket) {
+    const isOnline = this.server.sockets.adapter.rooms.get('drivers')?.has(payload.clientPhone) || false;
+    client.to('drivers').emit('driver:online', { clientPhone: payload.clientPhone, isOnline });
+    console.log("isDriverOnline ==> ", payload.clientPhone, isOnline);
+   }
+
   @SubscribeMessage('ride:loc')
   relayToRide(@MessageBody() payload: { clientPhone: number; lat: number; lng: number }, @ConnectedSocket() client: Socket) {
     client.to(`ride:${payload.clientPhone}`).emit('ride:loc', payload);
