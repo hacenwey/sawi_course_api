@@ -8,6 +8,7 @@ import { User } from './users/user.entity';
 import { Ride } from './rides/ride.entity';
 import { PaymentsModule } from './payments/payments.module';
 import { LocationGateway } from './realtime/location.gateway';
+import { DriversModule } from './drivers/drivers.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { LocationGateway } from './realtime/location.gateway';
     UsersModule,
     AuthModule,
     RidesModule,
-    PaymentsModule
+    PaymentsModule,
+    DriversModule
   ],
   providers: [LocationGateway]
 })
