@@ -1,13 +1,12 @@
-version: "3.9"
 services:
   db:
     image: mysql:8
     container_name: uber_mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword   # mot de passe root MySQL
-      MYSQL_DATABASE: uber_clone          # nom de la base
-      MYSQL_USER: uber_user               # utilisateur MySQL
-      MYSQL_PASSWORD: uber_pass           # mot de passe utilisateur
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: uber_clone
+      MYSQL_USER: uber_user
+      MYSQL_PASSWORD: uber_pass
     ports: 
       - "3306:3306"
     volumes:
@@ -35,7 +34,7 @@ services:
     container_name: uber_api
     command: npm run start:dev
     ports: ["3000:3000"]
-    env_file: .env
+    env_file: .env.dev
     volumes:
       - ./:/app
       - /app/node_modules
