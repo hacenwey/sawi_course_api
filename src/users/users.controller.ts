@@ -4,10 +4,11 @@ import { DriversService } from 'src/drivers/drivers.service';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UsersController {
-  constructor(private users: UsersService,private drivers: DriversService) {}
+  constructor(private users: UsersService,private drivers: DriversService,private jwt: JwtService) {}
 
   @Post('create')
     @UseInterceptors(
@@ -35,6 +36,14 @@ export class UsersController {
     }
 
     const user = await this.users.create(dto.phone, dto.password, dto.role ?? 'passenger');
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error('secretOrPrivateKey must have a value');
+    }
+    const token = await this.jwt.signAsync(
+      { sub: user.id, role: user.role },
+      { expiresIn: process.env.JWT_EXPIRES || '7d', secret: process.env.JWT_SECRET },
+    )
     const driverData = {
       clientPhone: dto.phone,
       userId: user.id,
@@ -51,9 +60,11 @@ export class UsersController {
       throw new BadRequestException('The phone number already exists');
     }
       const driver = await this.drivers.create(driverData);
-      return { user, driver };
+      
+      return { user, driver ,token};
     }
-    return { user };
+  
+    return { user, token };
   }
 
   @Get(':id')
