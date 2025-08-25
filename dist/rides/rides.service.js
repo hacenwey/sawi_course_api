@@ -21,12 +21,12 @@ let RidesService = class RidesService {
     constructor(repo) {
         this.repo = repo;
     }
-    createRequest(riderId, origin, dest) {
+    createRequest(riderId, origin, dest, price, clientPhone, originAddress, destAddress) {
         const [originLat, originLng] = origin;
         const [destLat, destLng] = dest;
         const ride = this.repo.create({
             riderId, driverId: null, status: 'requested',
-            originLat, originLng, destLat, destLng, price: 0
+            originLat, originLng, destLat, destLng, price: price || 0, clientPhone, originAddress, destAddress
         });
         return this.repo.save(ride);
     }
@@ -50,8 +50,9 @@ let RidesService = class RidesService {
     findById(id) {
         return this.repo.findOne({ where: { id } });
     }
-    listMyRides(userId) {
-        return this.repo.find({ where: [{ riderId: userId }, { driverId: userId }] });
+    listMyRides(clientPhone) {
+        console.log(`Fetching rides for client ${clientPhone}`);
+        return this.repo.find({ where: [{ clientPhone }] });
     }
 };
 exports.RidesService = RidesService;

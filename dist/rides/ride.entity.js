@@ -19,8 +19,8 @@ __decorate([
     __metadata("design:type", Number)
 ], Ride.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int' }),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
+    __metadata("design:type", Object)
 ], Ride.prototype, "riderId", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'int', nullable: true }),
@@ -54,6 +54,14 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'float', default: 0 }),
     __metadata("design:type", Number)
 ], Ride.prototype, "price", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
+    __metadata("design:type", String)
+], Ride.prototype, "originAddress", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
+    __metadata("design:type", String)
+], Ride.prototype, "destAddress", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)

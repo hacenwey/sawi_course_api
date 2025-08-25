@@ -15,14 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RidesController = void 0;
 const common_1 = require("@nestjs/common");
 const rides_service_1 = require("./rides.service");
-const jwt_auth_guard_1 = require("../common/guards/jwt-auth.guard");
 const current_user_decorator_1 = require("../common/decorators/current-user.decorator");
 let RidesController = class RidesController {
     constructor(rides) {
         this.rides = rides;
     }
     create(user, dto) {
-        return this.rides.createRequest(user.userId, dto.origin, dto.dest);
+        return this.rides.createRequest(null, dto.origin, dto.dest, dto.price, dto.clientPhone, dto.originAddress, dto.destAddress);
     }
     assign(user, id, dto) {
         const driverId = dto.driverId ?? user.userId;
@@ -34,8 +33,8 @@ let RidesController = class RidesController {
     get(id) {
         return this.rides.findById(+id);
     }
-    my(user) {
-        return this.rides.listMyRides(user.userId);
+    my(clientPhone) {
+        return this.rides.listMyRides(clientPhone);
     }
 };
 exports.RidesController = RidesController;
@@ -73,13 +72,12 @@ __decorate([
 ], RidesController.prototype, "get", null);
 __decorate([
     (0, common_1.Get)(),
-    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(0, (0, common_1.Param)('clientPhone')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], RidesController.prototype, "my", null);
 exports.RidesController = RidesController = __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('rides'),
     __metadata("design:paramtypes", [rides_service_1.RidesService])
 ], RidesController);

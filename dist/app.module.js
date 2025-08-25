@@ -15,6 +15,7 @@ const auth_module_1 = require("./auth/auth.module");
 const rides_module_1 = require("./rides/rides.module");
 const payments_module_1 = require("./payments/payments.module");
 const location_gateway_1 = require("./realtime/location.gateway");
+const drivers_module_1 = require("./drivers/drivers.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,7 +36,8 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
             rides_module_1.RidesModule,
-            payments_module_1.PaymentsModule
+            payments_module_1.PaymentsModule,
+            drivers_module_1.DriversModule
         ],
         providers: [location_gateway_1.LocationGateway]
     })

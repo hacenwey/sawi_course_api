@@ -12,53 +12,42 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersController = void 0;
+exports.DriversController = void 0;
 const common_1 = require("@nestjs/common");
-const users_service_1 = require("./users.service");
-const drivers_service_1 = require("../drivers/drivers.service");
+const drivers_service_1 = require("./drivers.service");
 const platform_express_1 = require("@nestjs/platform-express");
-const multer_1 = require("multer");
 const path_1 = require("path");
-let UsersController = class UsersController {
-    constructor(users, drivers) {
-        this.users = users;
+const multer_1 = require("multer");
+let DriversController = class DriversController {
+    constructor(drivers) {
         this.drivers = drivers;
     }
-    async create(dto, files = []) {
+    async createDriver(body, files = []) {
         const fileMap = {};
         files.forEach((file) => {
             fileMap[file.fieldname] = `/uploads/drivers/${file.filename}`;
         });
-        const userInDb = await this.users.findByPhone(dto.phone);
-        if (userInDb) {
-            throw new common_1.BadRequestException('The phone number already exists');
-        }
-        const user = await this.users.create(dto.phone, dto.password, dto.role ?? 'passenger');
         const driverData = {
-            clientPhone: dto.phone,
-            userId: user.id,
-            carModel: dto.carModel,
-            carPlate: dto.carPlate,
-            carColor: dto.carColor,
+            clientPhone: body.clientPhone,
+            userId: body.userId,
+            carModel: body.carModel,
+            carPlate: body.carPlate,
+            carColor: body.carColor,
             insuranceDocument: fileMap['insuranceDocument'] || undefined,
             licenseDocument: fileMap['licenseDocument'] || undefined,
             carImage: fileMap['carImage'] || undefined,
         };
-        if (dto.role === 'driver') {
-            const driverInDb = await this.drivers.findByPhone(dto.phone);
-            if (driverInDb) {
-                throw new common_1.BadRequestException('The phone number already exists');
-            }
-            const driver = await this.drivers.create(driverData);
-            return { user, driver };
-        }
-        return { user };
+        const driver = await this.drivers.create(driverData);
+        return { message: 'Driver created successfully', driver };
     }
-    get(id) {
-        return this.users.findById(+id);
+    goOnline(dto) {
+        return this.drivers.goOnline(dto);
+    }
+    isDriverOnline(dto) {
+        return this.drivers.isDriverOnline(dto);
     }
 };
-exports.UsersController = UsersController;
+exports.DriversController = DriversController;
 __decorate([
     (0, common_1.Post)('create'),
     (0, common_1.UseInterceptors)((0, platform_express_1.AnyFilesInterceptor)({
@@ -75,16 +64,23 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Array]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "create", null);
+], DriversController.prototype, "createDriver", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Post)('changeOnlineStatus'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], UsersController.prototype, "get", null);
-exports.UsersController = UsersController = __decorate([
-    (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [users_service_1.UsersService, drivers_service_1.DriversService])
-], UsersController);
-//# sourceMappingURL=users.controller.js.map
+], DriversController.prototype, "goOnline", null);
+__decorate([
+    (0, common_1.Post)('isDriverOnline'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], DriversController.prototype, "isDriverOnline", null);
+exports.DriversController = DriversController = __decorate([
+    (0, common_1.Controller)('drivers'),
+    __metadata("design:paramtypes", [drivers_service_1.DriversService])
+], DriversController);
+//# sourceMappingURL=drivers.controller.js.map
