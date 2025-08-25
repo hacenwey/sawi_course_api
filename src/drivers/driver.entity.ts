@@ -1,20 +1,26 @@
 // src/drivers/entities/driver.entity.ts
-import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('drivers')
 export class Driver {
-//   @PrimaryGeneratedColumn('uuid')
- @PrimaryGeneratedColumn()
-  id!: string;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
   @Index({ unique: true })
-  @Column({ length: 32 , nullable: true})
+  @Column({ length: 32, nullable: true })
   clientPhone!: string;
 
   @Index({ unique: true })
-  @Column({ length: 32 , nullable: true})
+  @Column({ length: 32, nullable: true })
   userId!: string;
-  
+
   @Column({ default: false })
   isAvailable!: boolean;
 
@@ -27,9 +33,31 @@ export class Driver {
   @Column({ type: 'text', nullable: true })
   currentLocationAddress!: string | null;
 
+  // --- New Car Info ---
+  @Column({ type: 'varchar', length: 64, nullable: true })
+  carModel!: string | null;
+
+  @Column({ type: 'varchar', length: 32, nullable: true })
+  carPlate!: string | null;
+
+  @Column({ type: 'varchar', length: 32, nullable: true })
+  carColor!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  carImage!: string | null;   // رابط لصورة السيارة
+
+  @Column({ type: 'text', nullable: true })
+  insuranceDocument!: string | null; // رابط صورة التأمين
+
+  @Column({ type: 'text', nullable: true })
+  licenseDocument!: string | null;   // رابط صورة الرخصة
+
+  @Column({ type: 'text', nullable: true })
+  vintDocument!: string | null; 
   @UpdateDateColumn()
   updatedAt!: Date;
 
   @CreateDateColumn()
   createdAt!: Date;
 }
+

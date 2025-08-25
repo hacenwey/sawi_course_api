@@ -11,7 +11,11 @@ export class DriversService {
     @InjectRepository(Driver)
     private readonly driversRepo: Repository<Driver>,
   ) {}
+ async create(dto:{clientPhone?: string, userId?: string, carModel?: string, carPlate?: string, carColor?: string, insuranceDocument?: string, licenseDocument?: string, carImage?: string}) {
+    const driver = this.driversRepo.create(dto);
+    return this.driversRepo.save(driver);
 
+ }
   async goOnline(dto:{clientPhone?: string, isOnline?: boolean, latitude?: number, longitude?: number}) {
     const { clientPhone, isOnline, latitude, longitude } = dto;
     let driver = await this.driversRepo.findOne({ where: { clientPhone } });

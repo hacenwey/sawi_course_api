@@ -14,7 +14,7 @@ export class User {
   @Column()
   passwordHash!: string;
 
-  @Column({ type: 'varchar', length: 16, default: 'passenger' })
+  @Column({ type: 'varchar', length: 16, default: 'driver' })
   role!: UserRole;
 
   @Column({ type: 'float', default: 5 })
