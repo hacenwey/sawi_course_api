@@ -18,8 +18,8 @@ export class Driver {
   clientPhone!: string;
 
   @Index({ unique: true })
-  @Column({ length: 32, nullable: true })
-  userId!: string;
+  @Column({ nullable: true })
+  userId!: number;
 
   @Column({ default: false })
   isAvailable!: boolean;
