@@ -8,6 +8,8 @@ export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Column({ type: 'varchar', length: 16, nullable: true })
+  name!: UserRole;
   @Column({ unique: true })
   phone!: string;
 

@@ -23,7 +23,7 @@ export class UsersController {
         }),
       }),
     )
-  async create(@Body() dto: { phone: string; password: string; role?: 'passenger' | 'driver' ,carModel: string, carPlate: string, carColor: string}, @UploadedFiles() files: Array<Express.Multer['File']> = []) {
+  async create(@Body() dto: { name: string; phone: string; password: string; role?: 'passenger' | 'driver' ,carModel: string, carPlate: string, carColor: string}, @UploadedFiles() files: Array<Express.Multer['File']> = []) {
       const fileMap: Record<string, string> = {};
 
     files.forEach((file) => {
@@ -35,7 +35,7 @@ export class UsersController {
       throw new BadRequestException('The phone number already exists');
     }
 
-    const user = await this.users.create(dto.phone, dto.password, dto.role ?? 'passenger');
+    const user = await this.users.create(dto.name, dto.phone, dto.password, dto.role ?? 'passenger');
 
     if (!process.env.JWT_SECRET) {
       throw new Error('secretOrPrivateKey must have a value');

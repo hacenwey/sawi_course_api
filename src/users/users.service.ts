@@ -15,9 +15,9 @@ export class UsersService {
     return this.repo.findOne({ where: { id } });
   }
 
-  async create(phone: string, password: string, role: 'passenger' | 'driver' = 'passenger') {
+  async create(name: string, phone: string, password: string, role: 'passenger' | 'driver' = 'passenger') {
     const passwordHash = await User.hashPassword(password);
-    const user = this.repo.create({ phone, passwordHash, role });
+    const user = this.repo.create({ name, phone, passwordHash, role });
     return this.repo.save(user);
   }
 
